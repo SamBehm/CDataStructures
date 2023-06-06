@@ -23,8 +23,11 @@ int compareIntegers(void* a, void* b);
 
 int main(void) {
     test_generate();
+    test_destroy();
     test_add();
     test_clone();
+    test_prepend();
+
 
     printf("All Tests Cleared!\n");
     fflush(stdout);
@@ -135,7 +138,7 @@ void test_prepend(void) {
     assert(*((int *)list->head->data) == b);
     linklist_destroy(&list, &free);
 
-    linklist_prepend(&a, sizeof(int), list);
+    error = linklist_prepend(&a, sizeof(int), list);
     assert(error == LINKEDLIST_INVALID_LIST);
 }
 

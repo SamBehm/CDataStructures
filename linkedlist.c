@@ -74,7 +74,25 @@ int linklist_add(void* data, size_t dataSize, LinkedList* list) {
 }
 
 int linklist_prepend(void* data, size_t dataSize, LinkedList* list) {
-    return 0;
+    if (list == NULL) {
+        return LINKEDLIST_INVALID_LIST;
+    }
+
+    Node* newNode;
+    newNode = malloc(sizeof(Node));
+
+    if (newNode == NULL) {
+        return LINKEDLIST_MEM_ERROR;
+    }
+
+    newNode->next = list->head;
+    newNode->data = malloc(dataSize);
+    memcpy(newNode->data, data, dataSize);
+
+    list->head = newNode;
+    newNode = NULL;
+
+    return LINKEDLIST_OK;
 }
 
 int linklist_insert(int index, void* data, size_t dataSize, LinkedList* list) {
