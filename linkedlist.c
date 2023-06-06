@@ -41,14 +41,14 @@ void* linklist_get(int index, LinkedList* list) {
     return NULL;
 }
 
-void* linklist_head(LinkedList* list) {
+void* linklist_getHead(LinkedList* list) {
     return NULL;
 }
 
-void* linklist_tail(LinkedList* list) {
+void* linklist_getTail(LinkedList* list) {
     return NULL;
 }
 
-void** linklist_toArray(LinkedList* list) {
+void* linklist_toArray(LinkedList* list) {
     return NULL;
 }

@@ -1,6 +1,7 @@
 #include "../linkedlist.h"
 #include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #define NUM_NODES 5
 
@@ -13,9 +14,12 @@ void test_clear(void);
 void test_size(void);
 void test_destroy(void);
 void test_indexOf(void);
+void test_get(void);
 void test_getHead(void);
 void test_getTail(void);
 void test_toArray(void);
+
+int compareIntegers(void* a, void* b);
 
 int main(void) {
     test_generate();    
@@ -191,7 +195,6 @@ void test_clear(void) {
 
 void test_size(void) {
     LinkedList* list;
-
     linklist_generate(&list);
     
     for (int i = 0; i < NUM_NODES; i++) {
@@ -211,17 +214,127 @@ void test_size(void) {
 }
 
 void test_indexOf(void) {
+    LinkedList* list;
+    linklist_generate(&list);
 
+    for (int i = 0; i < NUM_NODES; i++) {
+        linklist_add(&i, list);
+    }
+
+    int index;
+    for (int i = 0; i < NUM_NODES; i++) {
+        index = linklist_indexOf(&i, list, (int (*)(void*, void*))&compareIntegers);
+        assert(index == i);
+    }
+    
+    int val = NUM_NODES;
+    index = linklist_indexOf(&val, list, (int (*)(void*, void*))&compareIntegers);
+    assert(index == LINKEDLIST_INVALID_INDEX);
+    linklist_destroy(&list);
+
+    index = linklist_indexOf(&val, list, (int (*)(void*, void*))&compareIntegers);
+    assert(index == LINKEDLIST_INVALID_LIST);
 }
 
-void test_getHead(void) {
+void test_get(void) {
+    LinkedList* list;
+    linklist_generate(&list);
 
+    for (int i = 0; i < NUM_NODES; i++) {
+        linklist_add(&i, list);
+    }
+
+    int* val;
+    for (int i = 0; i < NUM_NODES; i++) {
+        val = (int*) linklist_get(i, list);
+        assert(val != NULL);
+        assert(*val == i);
+    }
+
+    val = (int*) linklist_get(NUM_NODES, list);
+    assert(val == NULL);
+
+    linklist_clear(list);
+    val = (int*) linklist_get(NUM_NODES - 1, list);
+    assert(val == NULL);
+
+    linklist_destroy(&list);
+}
+
+
+void test_getHead(void) {
+    LinkedList* list;
+    linklist_generate(&list);
+    int* val;
+
+    val = (int*) linklist_getHead(list);
+    assert(val == NULL);
+
+    for (int i = 0; i < NUM_NODES; i++) {
+        linklist_add(&i, list);
+    }
+
+    val = (int*) linklist_getHead(list);
+    assert(val != NULL);
+    assert(*val == 0);
+
+    linklist_clear(list);
+    val = (int*) linklist_getHead(list);
+    assert(val == NULL);
+
+    linklist_destroy(&list);
 }
 
 void test_getTail(void) {
+    LinkedList* list;
+    linklist_generate(&list);
+    int* val;
 
+    val = (int*) linklist_getTail(list);
+    assert(val == NULL);
+
+    for (int i = 0; i < NUM_NODES; i++) {
+        linklist_add(&i, list);
+    }
+
+    val = (int*) linklist_getTail(list);
+    assert(val != NULL);
+    assert(*val == NUM_NODES - 1);
+
+    linklist_clear(list);
+    val = (int*) linklist_getTail(list);
+    assert(val == NULL);
+    linklist_destroy(&list);
 }
 
 void test_toArray(void) {
+    LinkedList* list;
+    linklist_generate(&list);
+    int* array, values[NUM_NODES];
+    
+    array = (int*) linklist_toArray(list);
+    assert(array == NULL);
 
+    for (int i = 0; i < NUM_NODES; i++) {
+        values[i] = i;
+        linklist_add(&i, list);
+    }
+
+
+    array = (int*) linklist_toArray(list);
+    assert(array != NULL);
+
+    for (int i = 0; i < NUM_NODES; i++) {
+        assert(array[i] == values[i]);
+    }
+
+    free(array);
+    linklist_destroy(&list);
+}
+
+int compareIntegers(void* a, void* b) {
+    int ia = *(int*) a;
+    int ib = *(int*) b;
+    
+    return ia - ib;
 }
