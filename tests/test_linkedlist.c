@@ -22,7 +22,13 @@ void test_toArray(void);
 int compareIntegers(void* a, void* b);
 
 int main(void) {
-    test_generate();    
+    test_generate();
+    test_add();
+    test_clone();
+
+    printf("All Tests Cleared!\n");
+    fflush(stdout);
+    return 0;
 }
 
 void test_generate(void) {
@@ -41,11 +47,11 @@ void test_destroy(void) {
     linklist_generate(&list);
     assert(list != NULL);
 
-    error = linklist_destroy(&list);
+    error = linklist_destroy(&list, &free);
     assert(list == NULL);
     assert(error == LINKEDLIST_OK);
 
-    error = linklist_destroy(&list);
+    error = linklist_destroy(&list, &free);
     assert(error == LINKEDLIST_INVALID_LIST);
 }
 
@@ -69,7 +75,7 @@ void test_add(void) {
     }
 
     assert(head == NULL);
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
     
     int data = 1;
     error = linklist_add(&data, sizeof(int), list);
@@ -100,18 +106,18 @@ void test_clone(void) {
         head = head->next;
     }
 
-    assert(head2 != NULL);
+    assert(head2 == NULL);
 
-    linklist_destroy(&list);
-    linklist_destroy(&list2);
+    linklist_destroy(&list, &free);
+    linklist_destroy(&list2, &free);
     
     linklist_generate(&list);
     error = linklist_clone(&list2, list, sizeof(int));
     assert(error == LINKEDLIST_OK);
     assert(list2->head == NULL);
     
-    linklist_destroy(&list);
-    linklist_destroy(&list2);
+    linklist_destroy(&list, &free);
+    linklist_destroy(&list2, &free);
 
     error = linklist_clone(&list2, list, sizeof(int));
     assert(error == LINKEDLIST_INVALID_LIST);
@@ -127,7 +133,7 @@ void test_prepend(void) {
 
     assert(error == LINKEDLIST_OK);
     assert(*((int *)list->head->data) == b);
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 
     linklist_prepend(&a, sizeof(int), list);
     assert(error == LINKEDLIST_INVALID_LIST);
@@ -170,7 +176,7 @@ void test_insert(void) {
         head = head->next;
     }
 
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 }
 
 void test_clear(void) {
@@ -188,7 +194,7 @@ void test_clear(void) {
     assert(list != NULL);
     assert(list->head == NULL);
 
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
     error = linklist_clear(list);
     assert(error == LINKEDLIST_INVALID_LIST);
 }
@@ -209,7 +215,7 @@ void test_size(void) {
     size = linklist_size(list);
     assert(size == 0);
 
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
     assert(size == 0);
 }
 
@@ -230,7 +236,7 @@ void test_indexOf(void) {
     int val = NUM_NODES;
     index = linklist_indexOf(&val, list, (int (*)(void*, void*))&compareIntegers);
     assert(index == LINKEDLIST_INVALID_INDEX);
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 
     index = linklist_indexOf(&val, list, (int (*)(void*, void*))&compareIntegers);
     assert(index == LINKEDLIST_INVALID_LIST);
@@ -258,7 +264,7 @@ void test_get(void) {
     val = (int*) linklist_get(NUM_NODES - 1, list);
     assert(val == NULL);
 
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 }
 
 
@@ -282,7 +288,7 @@ void test_getHead(void) {
     val = (int*) linklist_getHead(list);
     assert(val == NULL);
 
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 }
 
 void test_getTail(void) {
@@ -304,7 +310,7 @@ void test_getTail(void) {
     linklist_clear(list);
     val = (int*) linklist_getTail(list);
     assert(val == NULL);
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 }
 
 void test_toArray(void) {
@@ -329,7 +335,7 @@ void test_toArray(void) {
     }
 
     free(array);
-    linklist_destroy(&list);
+    linklist_destroy(&list, &free);
 }
 
 int compareIntegers(void* a, void* b) {

@@ -28,7 +28,7 @@ int linklist_prepend(void* data, size_t dataSize, LinkedList* list);
 int linklist_insert(int index, void* data, size_t dataSize, LinkedList* list);
 int linklist_clear(LinkedList* list);
 int linklist_size(LinkedList* list);
-int linklist_destroy(LinkedList** list);
+int linklist_destroy(LinkedList** list, void (*destroyFunction)(void*));
 int linklist_indexOf(void* data, LinkedList* list, int (*compare)(void* a, void* b));
 void* linklist_get(int index, LinkedList* list);
 void* linklist_getHead(LinkedList* list);
