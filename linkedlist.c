@@ -1,12 +1,12 @@
 #include "linkedlist.h"
 #include <stdlib.h>
 
-LinkedList* linklist_generate(void) {
-    return NULL;
+int linklist_generate(LinkedList** list) {
+    return 0;
 }
 
-LinkedList* linklist_clone(LinkedList* list) {
-    return NULL;
+int linklist_clone(LinkedList** dstlist, LinkedList* srclist) {
+    return 0;
 }
 
 int linklist_add(void* data, LinkedList* list) {
@@ -29,7 +29,7 @@ int linklist_size(LinkedList* list) {
     return 0;
 }
 
-int linklist_destroy(LinkedList* list) {
+int linklist_destroy(LinkedList** list) {
     return 0;
 }
 
