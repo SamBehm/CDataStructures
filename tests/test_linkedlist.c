@@ -58,7 +58,7 @@ void test_add(void) {
     linklist_generate(&list);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        error = linklist_add(&i, list);
+        error = linklist_add(&i, sizeof(int), list);
         assert(error == LINKEDLIST_OK);
     }
 
@@ -72,7 +72,7 @@ void test_add(void) {
     linklist_destroy(&list);
     
     int data = 1;
-    error = linklist_add(&data, list);
+    error = linklist_add(&data, sizeof(int), list);
     
     assert(error == LINKEDLIST_INVALID_LIST);
 }
@@ -84,10 +84,10 @@ void test_clone(void) {
     linklist_generate(&list);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
-    error = linklist_clone(&list2, list);
+    error = linklist_clone(&list2, list, sizeof(int));
     assert(error == LINKEDLIST_OK);
     assert(list2 != NULL);
     assert(list != list2);
@@ -106,14 +106,14 @@ void test_clone(void) {
     linklist_destroy(&list2);
     
     linklist_generate(&list);
-    error = linklist_clone(&list2, list);
+    error = linklist_clone(&list2, list, sizeof(int));
     assert(error == LINKEDLIST_OK);
     assert(list2->head == NULL);
     
     linklist_destroy(&list);
     linklist_destroy(&list2);
 
-    error = linklist_clone(&list2, list);
+    error = linklist_clone(&list2, list, sizeof(int));
     assert(error == LINKEDLIST_INVALID_LIST);
 }
 
@@ -122,14 +122,14 @@ void test_prepend(void) {
     int a = 1, b = 2, error;
     linklist_generate(&list);
 
-    linklist_add(&a, list);
-    error = linklist_prepend(&b, list);
+    linklist_add(&a, sizeof(int), list);
+    error = linklist_prepend(&b, sizeof(int), list);
 
     assert(error == LINKEDLIST_OK);
     assert(*((int *)list->head->data) == b);
     linklist_destroy(&list);
 
-    linklist_prepend(&a, list);
+    linklist_prepend(&a, sizeof(int), list);
     assert(error == LINKEDLIST_INVALID_LIST);
 }
 
@@ -139,11 +139,11 @@ void test_insert(void) {
     int ins_data = 100, errno;
     
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
     
     /* Test invalid index */
-    errno = linklist_insert(-1, &ins_data, list);
+    errno = linklist_insert(-1, &ins_data, sizeof(int), list);
     assert(errno == LINKEDLIST_INVALID_INDEX);
 
     Node* head = list->head;
@@ -153,7 +153,7 @@ void test_insert(void) {
     }
 
     /* Test normal use */
-    errno = linklist_insert(3, &ins_data, list);
+    errno = linklist_insert(3, &ins_data, sizeof(int), list);
     assert(errno == LINKEDLIST_OK);
 
     head = list->head;
@@ -179,7 +179,7 @@ void test_clear(void) {
     int error;
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     error = linklist_clear(list);
@@ -198,7 +198,7 @@ void test_size(void) {
     linklist_generate(&list);
     
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     int size = linklist_size(list);
@@ -218,7 +218,7 @@ void test_indexOf(void) {
     linklist_generate(&list);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     int index;
@@ -241,7 +241,7 @@ void test_get(void) {
     linklist_generate(&list);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     int* val;
@@ -271,7 +271,7 @@ void test_getHead(void) {
     assert(val == NULL);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     val = (int*) linklist_getHead(list);
@@ -294,7 +294,7 @@ void test_getTail(void) {
     assert(val == NULL);
 
     for (int i = 0; i < NUM_NODES; i++) {
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
     val = (int*) linklist_getTail(list);
@@ -317,7 +317,7 @@ void test_toArray(void) {
 
     for (int i = 0; i < NUM_NODES; i++) {
         values[i] = i;
-        linklist_add(&i, list);
+        linklist_add(&i, sizeof(int), list);
     }
 
 
