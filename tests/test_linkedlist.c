@@ -27,7 +27,7 @@ int main(void) {
     test_add();
     test_clone();
     test_prepend();
-
+    test_insert();
 
     printf("All Tests Cleared!\n");
     fflush(stdout);
@@ -162,14 +162,15 @@ void test_insert(void) {
     }
 
     /* Test normal use */
-    errno = linklist_insert(3, &ins_data, sizeof(int), list);
+    int insertionIndex = 2;
+    errno = linklist_insert(insertionIndex, &ins_data, sizeof(int), list);
     assert(errno == LINKEDLIST_OK);
 
     head = list->head;
     int rev_step = 0;
     for (int i = 0; i < NUM_NODES + 1; i++) {
         assert(head != NULL);
-        if (i == 2) {
+        if (i == insertionIndex) {
             assert(*((int *)head->data) == ins_data);
             head = head->next;
             rev_step = 1;

@@ -34,3 +34,5 @@ void* linklist_get(int index, LinkedList* list);
 void* linklist_getHead(LinkedList* list);
 void* linklist_getTail(LinkedList* list);
 void* linklist_toArray(LinkedList* list);
+
+Node* linklist_createNode(void* data, size_t dataSize, Node* next);

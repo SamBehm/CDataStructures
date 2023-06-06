@@ -50,14 +50,10 @@ int linklist_add(void* data, size_t dataSize, LinkedList* list) {
     }
     
     Node* newNode, * tail;
-    newNode = malloc(sizeof(Node));
+    newNode = linklist_createNode(data, dataSize, NULL);
     if (newNode == NULL) {
         return LINKEDLIST_MEM_ERROR;
     }
-
-    newNode->next = NULL;
-    newNode->data = malloc(dataSize);
-    memcpy(newNode->data, data, dataSize);
 
     tail = list->head;
     if (tail == NULL) {
@@ -79,15 +75,10 @@ int linklist_prepend(void* data, size_t dataSize, LinkedList* list) {
     }
 
     Node* newNode;
-    newNode = malloc(sizeof(Node));
-
+    newNode = linklist_createNode(data, dataSize, list->head);
     if (newNode == NULL) {
         return LINKEDLIST_MEM_ERROR;
     }
-
-    newNode->next = list->head;
-    newNode->data = malloc(dataSize);
-    memcpy(newNode->data, data, dataSize);
 
     list->head = newNode;
     newNode = NULL;
@@ -96,7 +87,32 @@ int linklist_prepend(void* data, size_t dataSize, LinkedList* list) {
 }
 
 int linklist_insert(int index, void* data, size_t dataSize, LinkedList* list) {
-    return 0;
+    if (list == NULL) {
+        return LINKEDLIST_INVALID_LIST;
+    }
+
+    if (index < 0) {
+        return LINKEDLIST_INVALID_INDEX;
+    }
+
+    Node* newNode, * prevNode = list->head;
+    int i = 0;
+    while (i < index - 1 && prevNode != NULL) {
+        prevNode = prevNode->next;
+        i++;
+    }
+
+    if (prevNode == NULL) {
+        return LINKEDLIST_INVALID_INDEX;
+    }
+
+    newNode = linklist_createNode(data, dataSize, prevNode->next);
+    if (newNode == NULL) {
+        return LINKEDLIST_MEM_ERROR;
+    }
+    
+    prevNode->next = newNode;
+    return LINKEDLIST_OK;
 }
 
 int linklist_clear(LinkedList* list) {
@@ -147,4 +163,20 @@ void* linklist_getTail(LinkedList* list) {
 
 void* linklist_toArray(LinkedList* list) {
     return NULL;
+}
+
+Node* linklist_createNode(void* data, size_t dataSize, Node* next) {
+    Node* node = malloc(sizeof(Node));
+    if (node == NULL) {
+        return NULL;
+    }
+
+    node->next = next;
+    node->data = malloc(dataSize);
+    if (node->data == NULL) {
+        return NULL;
+    }
+
+    memcpy(node->data, data, dataSize);
+    return node;
 }
