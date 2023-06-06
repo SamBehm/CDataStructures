@@ -53,3 +53,5 @@ dkms.conf
 
 # Others
 *.swp*
+test_*
+!test_*.c
